@@ -66,7 +66,7 @@ The challenge requirements were to build a job board application where users can
 ### Links
 
 - Repository: [GitHub](https://github.com/AhmadYousif89/devjobs)
-- Live Site: [Vercel](https://devjobs.vercel.app/)
+- Live Site: [Vercel](https://devjobs-fe.vercel.app/)
 
 ## Technical Details
 
@@ -129,16 +129,6 @@ I implemented a compound component pattern for the filtering system, which provi
     </ButtonWithLoadingState>
   </ActionsField>
 </Filter>
-```
-
-### Responsive Design
-
-I implemented a mobile-first design with Tailwind's responsive variants for different viewports:
-
-```tsx
-<div className='relative grid max-md:place-items-center rounded-sm bg-card h-54.5 md:h-35 md:grid-cols-[140px_1fr]'>
-  {/* Content that adapts to mobile, tablet, and desktop */}
-</div>
 ```
 
 ### MongoDB Integration
