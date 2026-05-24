@@ -29,5 +29,5 @@ export type FilterOptions = {
   location?: string;
   contract?: 'Full Time' | 'Part Time' | 'Freelance' | '';
   limit?: string;
-  cursor?: string;
+  skip?: string;
 };

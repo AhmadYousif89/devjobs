@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState, useEffect, useRef } from 'react';
+import { use, useState, useEffect, FormEvent } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { Job } from '@/lib/types';
@@ -11,41 +11,29 @@ type JobsResponse = {
   jobs: Job[];
   totalCount: number;
   hasMore: boolean;
-  nextCursor: string | null;
 };
 
 export const JobsList = ({ promiseJobs }: { promiseJobs: Promise<JobsResponse> }) => {
   const initialData = use(promiseJobs);
   const [allJobs, setAllJobs] = useState<Job[]>(initialData.jobs);
   const [hasMore, setHasMore] = useState(initialData.hasMore);
-  const [cursor, setCursor] = useState(initialData.nextCursor);
   const [isLoading, setIsLoading] = useState(false);
-  const lastRequestedCursorRef = useRef<string | null>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const currentCursor = searchParams.get('cursor');
 
   useEffect(() => {
-    if (currentCursor && lastRequestedCursorRef.current === currentCursor) {
-      setAllJobs((currentJobs) => [...currentJobs, ...initialData.jobs]);
-    } else {
-      setAllJobs(initialData.jobs);
-    }
-    lastRequestedCursorRef.current = null;
+    setAllJobs(initialData.jobs);
     setHasMore(initialData.hasMore);
-    setCursor(initialData.nextCursor);
     setIsLoading(false);
-  }, [initialData, currentCursor]);
+  }, [initialData]);
 
-  const handleLoadMore = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleLoadMore = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!cursor) return;
-
     setIsLoading(true);
-    lastRequestedCursorRef.current = cursor;
     const params = new URLSearchParams(searchParams.toString());
-    params.set('cursor', cursor);
+    const currentJobCount = allJobs.length;
+    params.set('skip', String(currentJobCount));
     params.set('limit', '3'); // Load 3 more jobs
     router.push(`?${params.toString()}`, { scroll: false });
   };
@@ -62,7 +50,7 @@ export const JobsList = ({ promiseJobs }: { promiseJobs: Promise<JobsResponse> }
       <div className='absolute -top-1.5 right-0 text-xs text-accent-foreground mt-2 bg-card px-2 h-8 rounded flex items-center gap-6 overflow-x-auto'>
         <ul className='hidden md:has-[.flex]:flex items-center divide-x-2 divide-accent *:h-full *:px-2'>
           {[...searchParams.entries()]
-            .filter(([key, value]) => value !== '' && key !== 'limit' && key !== 'cursor')
+            .filter(([key, value]) => value !== '' && key !== 'limit' && key !== 'skip')
             .map(([key, value]) => {
               return (
                 <li key={key} className='flex items-center gap-1'>

@@ -1,12 +1,10 @@
 'use server';
 
-import { ObjectId } from 'mongodb';
-
 import connectToDatabase from '@/lib/db';
 import { Job, FilterOptions } from '@/lib/types';
 
 export async function getJobs(options: FilterOptions) {
-  const { query, location, contract, limit, cursor } = options;
+  const { query, location, contract, limit, skip } = options;
 
   try {
     const { db } = await connectToDatabase();
@@ -26,18 +24,16 @@ export async function getJobs(options: FilterOptions) {
       }
     }
 
-    const totalCount = await db.collection('jobs').countDocuments(baseFilter);
     const limitNum = limit ? parseInt(limit) : 12;
-    const cursorFilter =
-      cursor && ObjectId.isValid(cursor)
-        ? { ...baseFilter, _id: { $lt: new ObjectId(cursor) } }
-        : baseFilter;
+    const skipNum = skip ? parseInt(skip) : 0;
+    const effectiveLimit = skipNum > 0 ? skipNum + limitNum : limitNum;
+
+    const totalCount = await db.collection('jobs').countDocuments(baseFilter);
 
     const mongoData = await db
       .collection('jobs')
-      .find(cursorFilter)
-      .sort({ _id: -1 })
-      .limit(limitNum + 1)
+      .find(baseFilter)
+      .limit(effectiveLimit)
       .project<Job>({
         company: 1,
         logo: 1,
@@ -53,15 +49,12 @@ export async function getJobs(options: FilterOptions) {
         role: 1,
       })
       .toArray();
-    const hasMore = mongoData.length > limitNum;
-    const jobsPage = hasMore ? mongoData.slice(0, limitNum) : mongoData;
-    const nextCursor = hasMore ? (jobsPage.at(-1)?._id.toString() ?? null) : null;
+    const hasMore = totalCount > skipNum + mongoData.length;
 
     return {
-      jobs: jobsPage.map((j) => ({ ...j, _id: j._id.toString() })),
+      jobs: mongoData.map((j) => ({ ...j, _id: j._id.toString() })),
       totalCount,
       hasMore,
-      nextCursor,
     };
   } catch (error) {
     console.log('Failed to fetch jobs:', error);
