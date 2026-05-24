@@ -17,7 +17,7 @@ export const JobCard = (job: Job) => {
           <span className='h-1 w-1 rounded-full bg-accent-foreground' aria-hidden='true'></span>
           <span className=''>{job.contract}</span>
         </p>
-        <Link href={`/jobs/${job.id}`}>
+        <Link href={`/jobs/${job._id}`}>
           <Button variant='ghost' className='font-bold p-0 my-3 text-lg h-auto text-left '>
             {job.position}
           </Button>

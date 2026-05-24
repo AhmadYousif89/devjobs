@@ -1,5 +1,9 @@
+import { ObjectId } from 'mongodb';
+
+export type JobDoc = Omit<Job, '_id'> & { _id: ObjectId };
+
 export type Job = {
-  id: string;
+  _id: string;
   company: string;
   logo: string;
   logoBackground: string;
@@ -25,5 +29,5 @@ export type FilterOptions = {
   location?: string;
   contract?: 'Full Time' | 'Part Time' | 'Freelance' | '';
   limit?: string;
-  skip?: string;
+  cursor?: string;
 };

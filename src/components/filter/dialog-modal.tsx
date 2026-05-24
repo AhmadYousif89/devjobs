@@ -55,7 +55,7 @@ export const FilterModal = () => {
     const contract = formData.get('contract')?.toString() || '';
     const newParams = new URLSearchParams(searchParams.toString());
     newParams.delete('limit');
-    newParams.delete('skip');
+    newParams.delete('cursor');
 
     if (location) newParams.set('location', location);
     else newParams.delete('location');

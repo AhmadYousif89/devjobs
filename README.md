@@ -1,6 +1,6 @@
-# DevJobs Web App - Next.js Full Stack Solution
+# DevJobs - A Job Board Application
 
-This is a solution to the [Devjobs web app challenge on Frontend Mentor](https://www.frontendmentor.io/challenges/devjobs-web-app-HuvC_LP4l). Frontend Mentor challenges help you improve your coding skills by building realistic projects.
+- A full-stack job board application built with Next.js and MongoDB. The app features responsive design, dark/light mode, job filtering, pagination, and detailed job views.
 
 ## Table of Contents
 
@@ -11,13 +11,7 @@ This is a solution to the [Devjobs web app challenge on Frontend Mentor](https:/
   - [Links](#links)
 - [Technical Details](#technical-details)
   - [Built With](#built-with)
-  - [Project Architecture](#project-architecture)
   - [Key Components](#key-components)
-- [What I Learned](#what-i-learned)
-  - [Compound Components](#compound-components)
-  - [Server Components & Actions](#server-components--actions)
-  - [Responsive Design](#responsive-design)
-  - [MongoDB Integration](#mongodb-integration)
 - [Continued Development](#continued-development)
 - [Useful Resources](#useful-resources)
 - [Local Development](#local-development)
@@ -63,11 +57,6 @@ The challenge requirements were to build a job board application where users can
   </tr>
 </table>
 
-### Links
-
-- Repository: [GitHub](https://github.com/AhmadYousif89/devjobs)
-- Live Site: [Vercel](https://devjobs-fe.vercel.app/)
-
 ## Technical Details
 
 ### Built With
@@ -77,30 +66,6 @@ The challenge requirements were to build a job board application where users can
 - [MongoDB](https://www.mongodb.com/) - Database for job listings
 - [Tailwind CSS](https://tailwindcss.com/) - For styling
 
-### Project Architecture
-
-The application follows a modern Next.js App Router structure:
-
-```
-src/
-├── public/         # Static assets (images, icons)
-├── actions/        # Server actions for data operations
-├── app/            # Next.js App Router pages
-│   ├── jobs/[slug] # Dynamic job details route
-│   └── page.tsx    # Home page with job listings
-├── components/     # React components
-│   ├── filter/     # Job filtering components
-│   ├── header/     # App header with theme toggle
-│   ├── jobs/       # Job-related components
-│   └── ui/         # Reusable UI components
-├── lib/            # Utility functions and type definitions
-|   |── db.ts       # MongoDB connection
-|   |── types.ts    # Type definitions for job data
-|   |── utils.ts    # Utility functions
-|   └── logger.ts   # DB Logger utility
-
-```
-
 ### Key Components
 
 - **Filter System**: A compound component that allows filtering jobs by title, location, and contract type
@@ -108,46 +73,6 @@ src/
 - **JobCard**: A job summary card component with company logo and key information
 - **ButtonWithLoadingState**: A reusable button component with loading states
 - **JobPage**: The detailed job view with company information and requirements lists
-
-## What I Learned
-
-### Compound Components
-
-I implemented a compound component pattern for the filtering system, which provided a cleaner API and better separation of concerns:
-
-```tsx
-// Example of the filter compound component usage
-<Filter searchParams={searchParams}>
-  <QueryField />
-  <LocationField />
-  <ActionsField>
-    <FilterModal /> {/* Visible on mobile viewport only */}
-    <ContractField /> {/* Visible on desktop viewport only */}
-    <ButtonWithLoadingState>
-      <span className='hidden md:block'>Search</span>
-      <SearchIcon className='md:hidden' />
-    </ButtonWithLoadingState>
-  </ActionsField>
-</Filter>
-```
-
-### MongoDB Integration
-
-I learned how to integrate MongoDB with Next.js for efficient data querying:
-
-```tsx
-// MongoDB query with filtering and pagination
-const mongoData = await db
-  .collection<Job>('jobs')
-  .find(filter)
-  .skip(effectiveSkip)
-  .limit(effectiveLimit)
-  .sort({ id: 1 })
-  .project<Job>({
-    // Field projection
-  })
-  .toArray();
-```
 
 ## Continued Development
 
@@ -158,11 +83,6 @@ Areas I want to continue focusing on:
 - **Advanced Filtering**: Adding more advanced filtering options like salary range
 - **User Accounts**: Adding user authentication for job applications and saved jobs
 - **Testing**: Implementing comprehensive testing with Jest and React Testing Library
-
-## Useful Resources
-
-- [Next.js Documentation](https://nextjs.org/docs) - Comprehensive guide to Next.js features
-- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - For styling references
 
 ## Local Development
 

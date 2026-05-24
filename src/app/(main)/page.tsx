@@ -12,7 +12,7 @@ export type SearchParams = Promise<{
   location?: string;
   contract?: FilterOptions['contract'];
   limit?: string;
-  skip?: string;
+  cursor?: string;
 }>;
 
 export default async function Home({ searchParams }: { searchParams: SearchParams }) {
@@ -22,7 +22,7 @@ export default async function Home({ searchParams }: { searchParams: SearchParam
     ...(sp.location ? { location: sp.location } : {}),
     ...(sp.contract ? { contract: sp.contract } : {}),
     ...(sp.limit ? { limit: sp.limit } : {}),
-    ...(sp.skip ? { skip: sp.skip } : {}),
+    ...(sp.cursor ? { cursor: sp.cursor } : {}),
   });
 
   return (

@@ -2,7 +2,7 @@ import Form from 'next/form';
 import { ObjectId } from 'mongodb';
 import { notFound } from 'next/navigation';
 
-import { Job } from '@/lib/types';
+import { Job, JobDoc } from '@/lib/types';
 import connectToDatabase from '@/lib/db';
 import { Button } from '@/components/ui/button';
 import { ButtonWithLoadingState } from '@/components/loading_button';
@@ -11,7 +11,6 @@ type Params = Promise<{ slug: string }>;
 
 export default async function JobPage({ params }: { params: Params }) {
   const { slug } = await params;
-  // verfy if job id is a valid ObjectId
   if (!ObjectId.isValid(slug)) return notFound();
 
   const job = await getJobById(slug);
@@ -20,11 +19,12 @@ export default async function JobPage({ params }: { params: Params }) {
 
   return (
     <>
-      <main className='font-sans wrapper max-w-[730px] -mt-4 space-y-6 md:-mt-10'>
+      <main className='font-sans wrapper max-w-182.5 -mt-4 space-y-6 md:-mt-10'>
         <header className='relative md:overflow-hidden grid max-md:place-items-center rounded-sm bg-card h-54.5 md:h-35 md:grid-cols-[140px_1fr] md:rounded-tl-none'>
           <div
             style={{ backgroundColor: job.logoBackground }}
-            className='grid place-content-center rounded-2xl max-md:absolute max-md:left-1/2 max-md:-translate-x-1/2 max-md:-top-6.25 md:rounded-none'>
+            className='grid place-content-center rounded-2xl max-md:absolute max-md:left-1/2 max-md:-translate-x-1/2 max-md:-top-6.25 md:rounded-none'
+          >
             <span
               dangerouslySetInnerHTML={{ __html: job.logo }}
               className='grid place-content-center size-12.5 md:size-full md:scale-[2]'
@@ -50,7 +50,8 @@ export default async function JobPage({ params }: { params: Params }) {
                 <span>{job.postedAt}</span>
                 <span
                   className='h-1 w-1 rounded-full bg-accent-foreground dark:bg-accent'
-                  aria-hidden='true'></span>
+                  aria-hidden='true'
+                ></span>
                 <span className=''>{job.contract}</span>
               </p>
               <h2 className='mt-2 mb-3 font-bold text-very-dark-blue dark:text-secondary-foreground md:text-[28px]'>
@@ -63,7 +64,8 @@ export default async function JobPage({ params }: { params: Params }) {
             <Form action='/'>
               <ButtonWithLoadingState
                 loadingText={{ smallScreen: 'Sending application', largeScreen: 'Sending' }}
-                className='w-full font-bold min-h-12 content-("my-content") md:w-35.25'>
+                className='w-full font-bold min-h-12 content-("my-content") md:w-35.25'
+              >
                 Apply Now
               </ButtonWithLoadingState>
             </Form>
@@ -106,7 +108,7 @@ export default async function JobPage({ params }: { params: Params }) {
           </section>
         </article>
       </main>
-      <footer className='bg-card p-6 rounded-tr-sm rounded-tl-sm max-w-[1440px] mx-auto md:px-10 md:py-4.5'>
+      <footer className='bg-card p-6 rounded-tr-sm rounded-tl-sm max-w-360 mx-auto md:px-10 md:py-4.5'>
         <Form action='/'>
           <fieldset className='max-w-3xl mx-auto flex items-center justify-between'>
             <div className='hidden space-y-2 md:block'>
@@ -117,7 +119,8 @@ export default async function JobPage({ params }: { params: Params }) {
             </div>
             <ButtonWithLoadingState
               loadingText={{ smallScreen: 'Sending application', largeScreen: 'Sending' }}
-              className='max-md:max-w-2xl max-md:w-full max-md:mx-auto font-bold min-h-12 md:w-35.25'>
+              className='max-md:max-w-2xl max-md:w-full max-md:mx-auto font-bold min-h-12 md:w-35.25'
+            >
               Apply Now
             </ButtonWithLoadingState>
           </fieldset>
@@ -129,7 +132,7 @@ export default async function JobPage({ params }: { params: Params }) {
 
 async function getJobById(id: string) {
   const { db } = await connectToDatabase();
-  const mongoData = await db.collection<Job>('jobs').findOne({ _id: new ObjectId(id) });
+  const mongoData = await db.collection<JobDoc>('jobs').findOne({ _id: new ObjectId(id) });
 
   if (!mongoData) return null;
 
