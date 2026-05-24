@@ -2,7 +2,7 @@ import Form from 'next/form';
 import { ObjectId } from 'mongodb';
 import { notFound } from 'next/navigation';
 
-import { Job, JobDoc } from '@/lib/types';
+import { JobDoc } from '@/lib/types';
 import connectToDatabase from '@/lib/db';
 import { Button } from '@/components/ui/button';
 import { ButtonWithLoadingState } from '@/components/loading_button';

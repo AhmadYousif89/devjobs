@@ -7,7 +7,6 @@ Use a global variable to store the connection
 This exists outside React's rendering cycle and persists between requests
 */
 declare global {
-  // eslint-disable-next-line no-var
   var mongoDBPromise: Promise<{ client: MongoClient; db: Db }> | undefined;
 }
 
